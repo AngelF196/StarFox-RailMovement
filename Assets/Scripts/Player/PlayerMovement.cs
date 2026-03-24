@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform aimTarget;
     public CinemachineDollyCart dolly;
     public Transform cameraParent;
+    public GameObject LazerPrefab;
 
     [Space]
 
@@ -33,46 +35,57 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem circle;
     public ParticleSystem barrel;
     public ParticleSystem stars;
+    
+    [Space]
+
+    [Header("Input System")]
+    public PlayerInputs inputs;
+
+    private Vector2 movementAxis;
 
     void Start()
     {
+        inputs = new PlayerInputs();
+        inputs.Enable();
         playerModel = transform.GetChild(0);
         SetSpeed(forwardSpeed);
     }
 
     void Update()
     {
-        float h = joystick ? Input.GetAxis("Horizontal") : Input.GetAxis("Mouse X");
-        float v = joystick ? Input.GetAxis("Vertical") : Input.GetAxis("Mouse Y");
+        movementAxis = inputs.Arwing.Move.ReadValue<Vector2>();
 
-        LocalMove(h, v, xySpeed);
-        RotationLook(h,v, lookSpeed);
-        HorizontalLean(playerModel, h, 80, .1f);
+        LocalMove(movementAxis, xySpeed);
+        RotationLook(movementAxis, lookSpeed);
+        HorizontalLean(playerModel, movementAxis.x, 80, .1f);
 
-        if (Input.GetButtonDown("Action"))
-            Boost(true);
+        if (inputs.Arwing.Boost.WasPressedThisFrame()) Boost(true);
 
-        if (Input.GetButtonUp("Action"))
-            Boost(false);
+        if (inputs.Arwing.Boost.WasReleasedThisFrame()) Boost(false);
 
-        if (Input.GetButtonDown("Fire3"))
-            Break(true);
+        if (inputs.Arwing.Break.WasPressedThisFrame()) Break(true);
 
-        if (Input.GetButtonUp("Fire3"))
-            Break(false);
+        if (inputs.Arwing.Break.WasReleasedThisFrame()) Break(false);
 
-        if (Input.GetButtonDown("TriggerL") || Input.GetButtonDown("TriggerR"))
+        if (inputs.Arwing.Lazer.WasPressedThisFrame()) Shoot();
+
+        if (inputs.Arwing.LeftTilt.WasPressedThisFrame() || inputs.Arwing.RightTilt.WasPressedThisFrame())
         {
-            int dir = Input.GetButtonDown("TriggerL") ? -1 : 1;
+            int dir = inputs.Arwing.LeftTilt.WasPressedThisFrame() ? -1 : 1;
             QuickSpin(dir);
         }
 
 
     }
 
-    void LocalMove(float x, float y, float speed)
+    void Shoot()
     {
-        transform.localPosition += new Vector3(x, y, 0) * speed * Time.deltaTime;
+        Instantiate(LazerPrefab, transform.position, Quaternion.LookRotation(transform.forward));
+    }
+
+    void LocalMove(Vector2 inputaxis, float speed)
+    {
+        transform.localPosition += new Vector3(inputaxis.x, inputaxis.y, 0) * speed * Time.deltaTime;
         ClampPosition();
     }
 
@@ -84,10 +97,10 @@ public class PlayerMovement : MonoBehaviour
         transform.position = Camera.main.ViewportToWorldPoint(pos);
     }
 
-    void RotationLook(float h, float v, float speed)
+    void RotationLook(Vector2 movement, float speed)
     {
         aimTarget.parent.position = Vector3.zero;
-        aimTarget.localPosition = new Vector3(h, v, 1);
+        aimTarget.localPosition = new Vector3(movementAxis.x, movementAxis.y, 1);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(aimTarget.position), Mathf.Deg2Rad * speed * Time.deltaTime);
     }
 
