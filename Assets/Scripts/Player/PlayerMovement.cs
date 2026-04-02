@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineDollyCart dolly;
     public Transform cameraParent;
     public GameObject LazerPrefab;
+    public GameObject BombPrefab;
 
     [Space]
 
@@ -69,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (inputs.Arwing.Lazer.WasPressedThisFrame()) Shoot();
 
+        if (inputs.Arwing.Bomb.WasPressedThisFrame()) Bomb();
+
         if (inputs.Arwing.LeftTilt.WasPressedThisFrame() || inputs.Arwing.RightTilt.WasPressedThisFrame())
         {
             int dir = inputs.Arwing.LeftTilt.WasPressedThisFrame() ? -1 : 1;
@@ -78,6 +81,18 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    void Bomb()
+    {
+        Bomb bomb = FindObjectOfType<Bomb>();
+        if (bomb == null) 
+        {
+            Instantiate(BombPrefab, transform.position, Quaternion.LookRotation(transform.forward));
+        }
+        else
+        {
+            bomb.Explode();
+        }
+    }
     void Shoot()
     {
         Instantiate(LazerPrefab, transform.position, Quaternion.LookRotation(transform.forward));

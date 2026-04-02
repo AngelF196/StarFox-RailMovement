@@ -19797,7 +19797,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.7579e-41, y: 1.7757e-41, z: NaN, w: 6.097e-42}
+  m_BoundingSphereOverride: {x: 0, y: 8e-45, z: 3.741e-42, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -34565,6 +34565,8 @@ MonoBehaviour:
   dolly: {fileID: 361593942}
   cameraParent: {fileID: 504094690}
   LazerPrefab: {fileID: 8335092419680650348, guid: 78706ee14d2439e46b46568a5f997846,
+    type: 3}
+  BombPrefab: {fileID: 9050683506469566512, guid: 098ebf3dd7091524194e5020e06cf8a3,
     type: 3}
   trail: {fileID: 388635789}
   circle: {fileID: 1498601225}
