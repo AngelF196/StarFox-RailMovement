@@ -6,28 +6,23 @@ using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class Corridor : MonoBehaviour
 {
     private Transform playerModel;
-
-    [Header("Settings")]
-    public bool joystick = true;
-
-    [Space]
 
     [Header("Parameters")]
     public float xySpeed = 18;
     public float lookSpeed = 340;
     public float forwardSpeed = 6;
-
+    public float horizLeanLimit = 80;
+    public float horizLeanTime = 0.1f;
+    public float shipNoseTiltDivisor = 2;
     [Space]
 
     [Header("Public References")]
     public Transform aimTarget;
     public CinemachineDollyCart dolly;
     public Transform cameraParent;
-    public GameObject LazerPrefab;
-    public GameObject BombPrefab;
 
     [Space]
 
@@ -36,74 +31,26 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem circle;
     public ParticleSystem barrel;
     public ParticleSystem stars;
-    
-    [Space]
-
-    [Header("Input System")]
-    public PlayerInputs inputs;
-
-    private Vector2 movementAxis;
 
     void Start()
     {
-        inputs = new PlayerInputs();
-        inputs.Enable();
         playerModel = transform.GetChild(0);
         SetSpeed(forwardSpeed);
     }
 
-    void Update()
+    public void LocalMove(Vector2 inputaxis)
     {
-        movementAxis = inputs.Arwing.Move.ReadValue<Vector2>();
+        Vector3 camForward = cameraParent.forward;
 
-        LocalMove(movementAxis, xySpeed);
-        RotationLook(movementAxis, lookSpeed);
-        HorizontalLean(playerModel, movementAxis.x, 80, .1f);
+        // Project forward onto camera plane
+        Vector3 targetTransform = Vector3.ProjectOnPlane(transform.forward, camForward);
 
-        if (inputs.Arwing.Boost.WasPressedThisFrame()) Boost(true);
+        transform.position += targetTransform * xySpeed * Time.deltaTime;
 
-        if (inputs.Arwing.Boost.WasReleasedThisFrame()) Boost(false);
-
-        if (inputs.Arwing.Break.WasPressedThisFrame()) Break(true);
-
-        if (inputs.Arwing.Break.WasReleasedThisFrame()) Break(false);
-
-        if (inputs.Arwing.Lazer.WasPressedThisFrame()) Shoot();
-
-        if (inputs.Arwing.Bomb.WasPressedThisFrame()) Bomb();
-
-        if (inputs.Arwing.LeftTilt.WasPressedThisFrame() || inputs.Arwing.RightTilt.WasPressedThisFrame())
-        {
-            int dir = inputs.Arwing.LeftTilt.WasPressedThisFrame() ? -1 : 1;
-            QuickSpin(dir);
-        }
-
-    }
-
-    void Bomb()
-    {
-        Bomb bomb = FindObjectOfType<Bomb>();
-        if (bomb == null) 
-        {
-            Instantiate(BombPrefab, transform.position, Quaternion.LookRotation(transform.forward));
-        }
-        else
-        {
-            bomb.Explode();
-        }
-    }
-    void Shoot()
-    {
-        Instantiate(LazerPrefab, transform.position, Quaternion.LookRotation(transform.forward));
-    }
-
-    void LocalMove(Vector2 inputaxis, float speed)
-    {
-        transform.localPosition += new Vector3(inputaxis.x, inputaxis.y, 0) * speed * Time.deltaTime;
         ClampPosition();
     }
 
-    void ClampPosition()
+    public void ClampPosition()
     {
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
         pos.x = Mathf.Clamp01(pos.x);
@@ -111,17 +58,17 @@ public class PlayerMovement : MonoBehaviour
         transform.position = Camera.main.ViewportToWorldPoint(pos);
     }
 
-    void RotationLook(Vector2 movement, float speed)
+    public void RotationLook(Vector2 movement)
     {
         aimTarget.parent.position = Vector3.zero;
-        aimTarget.localPosition = new Vector3(movementAxis.x, movementAxis.y, 1);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(aimTarget.position), Mathf.Deg2Rad * speed * Time.deltaTime);
+        aimTarget.localPosition = new Vector3(movement.x/shipNoseTiltDivisor, movement.y/shipNoseTiltDivisor, 1);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(aimTarget.position), Mathf.Deg2Rad * lookSpeed * Time.deltaTime);
     }
 
-    void HorizontalLean(Transform target, float axis, float leanLimit, float lerpTime)
+    public void HorizontalLean(float axis)
     {
-        Vector3 targetEulerAngels = target.localEulerAngles;
-        target.localEulerAngles = new Vector3(targetEulerAngels.x, targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, -axis * leanLimit, lerpTime));
+        Vector3 targetEulerAngels = playerModel.localEulerAngles;
+        playerModel.localEulerAngles = new Vector3(targetEulerAngels.x, targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, -axis * horizLeanLimit, horizLeanTime));
     }
 
     private void OnDrawGizmos()
@@ -167,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Boost(bool state)
+    public void Boost(bool state)
     {
 
         if (state)
@@ -203,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
         SetCameraZoom(zoom, .4f);
     }
 
-    void Break(bool state)
+    public void Break(bool state)
     {
         float speed = state ? forwardSpeed / 3 : forwardSpeed;
         float zoom = state ? 3 : 0;

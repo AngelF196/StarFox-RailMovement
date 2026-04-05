@@ -18187,7 +18187,7 @@ Transform:
   m_GameObject: {fileID: 606134572}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 5.820767e-11, z: -0.0000000073341657, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 17.13}
+  m_LocalPosition: {x: 0, y: 0, z: 17}
   m_LocalScale: {x: 0.59, y: 0.59, z: 0.59000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -19797,7 +19797,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 6e-44, z: 0, w: 9.038e-42}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 6e-44, z: 4.9e-44, w: 9.257e-42}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -34515,7 +34515,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 959202325}
-  - component: {fileID: 959202326}
+  - component: {fileID: 959202332}
+  - component: {fileID: 959202331}
+  - component: {fileID: 959202330}
   - component: {fileID: 959202327}
   - component: {fileID: 959202328}
   - component: {fileID: 959202329}
@@ -34545,33 +34547,6 @@ Transform:
   - {fileID: 606134573}
   m_Father: {fileID: 361593941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &959202326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 959202324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a61c31c72ec22b1409e4ad1f73dd8a09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joystick: 0
-  xySpeed: 12
-  lookSpeed: 10000
-  forwardSpeed: 12
-  aimTarget: {fileID: 211228551}
-  dolly: {fileID: 361593942}
-  cameraParent: {fileID: 504094690}
-  LazerPrefab: {fileID: 8335092419680650348, guid: 78706ee14d2439e46b46568a5f997846,
-    type: 3}
-  BombPrefab: {fileID: 9050683506469566512, guid: 098ebf3dd7091524194e5020e06cf8a3,
-    type: 3}
-  trail: {fileID: 388635789}
-  circle: {fileID: 1498601225}
-  barrel: {fileID: 906174192}
-  stars: {fileID: 908740349}
 --- !u!65 &959202327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34651,6 +34626,62 @@ MonoBehaviour:
   m_DefaultActionMap: Arwing
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &959202330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959202324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817e9174ced9f294fb034b076a3d2691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attack: {fileID: 959202331}
+  cMovement: {fileID: 959202332}
+  invertY: 1
+--- !u!114 &959202331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959202324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d8c27a8b6574d458d25dc48161d93a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LazerPrefab: {fileID: 8335092419680650348, guid: 78706ee14d2439e46b46568a5f997846,
+    type: 3}
+  BombPrefab: {fileID: 9050683506469566512, guid: 098ebf3dd7091524194e5020e06cf8a3,
+    type: 3}
+--- !u!114 &959202332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959202324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f856e5f8836b0cd4ba69e4031c11c32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xySpeed: 37.9
+  lookSpeed: 3108
+  forwardSpeed: 12
+  horizLeanLimit: 50
+  horizLeanTime: 0.1
+  shipNoseTiltDivisor: 3
+  aimTarget: {fileID: 211228551}
+  dolly: {fileID: 361593942}
+  cameraParent: {fileID: 504094690}
+  trail: {fileID: 388635789}
+  circle: {fileID: 1498601225}
+  barrel: {fileID: 906174192}
+  stars: {fileID: 528532885}
 --- !u!1 &967883866
 GameObject:
   m_ObjectHideFlags: 0
