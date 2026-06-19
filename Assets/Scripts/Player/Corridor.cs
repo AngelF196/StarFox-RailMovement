@@ -9,14 +9,22 @@ using UnityEngine.InputSystem;
 public class Corridor : MonoBehaviour
 {
     private Transform playerModel;
+    private Inputs input;
+    private float rollOffset = 0;
+    private float currentZ;
+    private Coroutine rollCoroutine;
 
     [Header("Parameters")]
-    public float xySpeed = 18;
+    public float xSpeed = 38;
+    public float ySpeed = 38;
+    public float xySpeed = 38;
     public float lookSpeed = 340;
     public float forwardSpeed = 6;
     public float horizLeanLimit = 80;
     public float horizLeanTime = 0.1f;
-    public float shipNoseTiltDivisor = 2;
+    public float xShipNoseTiltDivisor = 2;
+    public float yShipNoseTiltDivisor = 2;
+
     [Space]
 
     [Header("Public References")]
@@ -35,6 +43,7 @@ public class Corridor : MonoBehaviour
     void Start()
     {
         playerModel = transform.GetChild(0);
+        input = GetComponent<Inputs>();
         SetSpeed(forwardSpeed);
     }
 
@@ -61,14 +70,52 @@ public class Corridor : MonoBehaviour
     public void RotationLook(Vector2 movement)
     {
         aimTarget.parent.position = Vector3.zero;
-        aimTarget.localPosition = new Vector3(movement.x/shipNoseTiltDivisor, movement.y/shipNoseTiltDivisor, 1);
+        aimTarget.localPosition = new Vector3(movement.x/xShipNoseTiltDivisor, movement.y/yShipNoseTiltDivisor, 1);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(aimTarget.position), Mathf.Deg2Rad * lookSpeed * Time.deltaTime);
     }
 
-    public void HorizontalLean(float axis)
+    public void ZTilt(float axis, int tiltDir, int rollDir)
     {
-        Vector3 targetEulerAngels = playerModel.localEulerAngles;
-        playerModel.localEulerAngles = new Vector3(targetEulerAngels.x, targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, -axis * horizLeanLimit, horizLeanTime));
+        float targetZ = 0f;
+
+        // base tilting
+        targetZ = -axis * horizLeanLimit;
+
+        // L/R Hard Tilt
+        if (tiltDir != 0) targetZ = 90f * -tiltDir;
+
+        currentZ = Mathf.LerpAngle(currentZ, targetZ, horizLeanTime);
+
+        if (rollDir != 0 && rollCoroutine is null)
+        {
+            rollCoroutine = StartCoroutine(BarrelRoll(rollDir));
+            barrel.Play();
+
+        }
+
+        playerModel.localEulerAngles = new Vector3(playerModel.localEulerAngles.x,
+        playerModel.localEulerAngles.y,
+        // Build off a Z value that is not continuously added to
+        currentZ + rollOffset);
+        
+    }
+
+    private IEnumerator BarrelRoll(int rollDir)
+    {
+        float rollDuration = 0.5f;
+        float timer = 0;
+
+        while (timer < 1f)
+        {
+            timer += Time.deltaTime/rollDuration;
+
+            rollOffset = Mathf.SmoothStep(0, 360 * -rollDir, timer);
+            
+            yield return null;
+        }
+
+        rollOffset = 0f;
+        rollCoroutine = null;
     }
 
     private void OnDrawGizmos()
@@ -77,15 +124,6 @@ public class Corridor : MonoBehaviour
         Gizmos.DrawWireSphere(aimTarget.position, .5f);
         Gizmos.DrawSphere(aimTarget.position, .15f);
 
-    }
-
-    public void QuickSpin(int dir)
-    {
-        if (!DOTween.IsTweening(playerModel))
-        {
-            playerModel.DOLocalRotate(new Vector3(playerModel.localEulerAngles.x, playerModel.localEulerAngles.y, 360 * -dir), .4f, RotateMode.LocalAxisAdd).SetEase(Ease.OutSine);
-            barrel.Play();
-        }
     }
 
     void SetSpeed(float x)

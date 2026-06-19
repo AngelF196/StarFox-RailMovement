@@ -66,7 +66,16 @@
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.02)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Left Roll",
+                    "type": "Button",
+                    "id": "a9615cb0-d8b3-4de5-ba38-f4ed64fd6de6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "MultiTap",
                     "initialStateCheck": false
                 },
                 {
@@ -75,7 +84,16 @@
                     "id": "b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.02)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Right Roll",
+                    "type": "Button",
+                    "id": "8a56625c-6823-47b7-a44a-f967f7d53645",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "MultiTap",
                     "initialStateCheck": false
                 },
                 {
@@ -185,6 +203,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Break",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aff160ab-8ca5-47d6-95fa-d1b334980c6d",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right Roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "73187499-918c-4544-9ad8-7e9316ffa653",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Roll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

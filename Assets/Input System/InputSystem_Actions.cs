@@ -152,7 +152,16 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.02)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left Roll"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9615cb0-d8b3-4de5-ba38-f4ed64fd6de6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -161,7 +170,16 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""id"": ""b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.02)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Right Roll"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a56625c-6823-47b7-a44a-f967f7d53645"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -273,6 +291,28 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Break"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aff160ab-8ca5-47d6-95fa-d1b334980c6d"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73187499-918c-4544-9ad8-7e9316ffa653"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -355,7 +395,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Arwing_Break = m_Arwing.FindAction("Break", throwIfNotFound: true);
         m_Arwing_Boost = m_Arwing.FindAction("Boost", throwIfNotFound: true);
         m_Arwing_LeftTilt = m_Arwing.FindAction("Left Tilt", throwIfNotFound: true);
+        m_Arwing_LeftRoll = m_Arwing.FindAction("Left Roll", throwIfNotFound: true);
         m_Arwing_RightTilt = m_Arwing.FindAction("Right Tilt", throwIfNotFound: true);
+        m_Arwing_RightRoll = m_Arwing.FindAction("Right Roll", throwIfNotFound: true);
         m_Arwing_Comms = m_Arwing.FindAction("Comms", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -447,7 +489,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Arwing_Break;
     private readonly InputAction m_Arwing_Boost;
     private readonly InputAction m_Arwing_LeftTilt;
+    private readonly InputAction m_Arwing_LeftRoll;
     private readonly InputAction m_Arwing_RightTilt;
+    private readonly InputAction m_Arwing_RightRoll;
     private readonly InputAction m_Arwing_Comms;
     /// <summary>
     /// Provides access to input actions defined in input action map "Arwing".
@@ -489,9 +533,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @LeftTilt => m_Wrapper.m_Arwing_LeftTilt;
         /// <summary>
+        /// Provides access to the underlying input action "Arwing/LeftRoll".
+        /// </summary>
+        public InputAction @LeftRoll => m_Wrapper.m_Arwing_LeftRoll;
+        /// <summary>
         /// Provides access to the underlying input action "Arwing/RightTilt".
         /// </summary>
         public InputAction @RightTilt => m_Wrapper.m_Arwing_RightTilt;
+        /// <summary>
+        /// Provides access to the underlying input action "Arwing/RightRoll".
+        /// </summary>
+        public InputAction @RightRoll => m_Wrapper.m_Arwing_RightRoll;
         /// <summary>
         /// Provides access to the underlying input action "Arwing/Comms".
         /// </summary>
@@ -543,9 +595,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @LeftTilt.started += instance.OnLeftTilt;
             @LeftTilt.performed += instance.OnLeftTilt;
             @LeftTilt.canceled += instance.OnLeftTilt;
+            @LeftRoll.started += instance.OnLeftRoll;
+            @LeftRoll.performed += instance.OnLeftRoll;
+            @LeftRoll.canceled += instance.OnLeftRoll;
             @RightTilt.started += instance.OnRightTilt;
             @RightTilt.performed += instance.OnRightTilt;
             @RightTilt.canceled += instance.OnRightTilt;
+            @RightRoll.started += instance.OnRightRoll;
+            @RightRoll.performed += instance.OnRightRoll;
+            @RightRoll.canceled += instance.OnRightRoll;
             @Comms.started += instance.OnComms;
             @Comms.performed += instance.OnComms;
             @Comms.canceled += instance.OnComms;
@@ -581,9 +639,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @LeftTilt.started -= instance.OnLeftTilt;
             @LeftTilt.performed -= instance.OnLeftTilt;
             @LeftTilt.canceled -= instance.OnLeftTilt;
+            @LeftRoll.started -= instance.OnLeftRoll;
+            @LeftRoll.performed -= instance.OnLeftRoll;
+            @LeftRoll.canceled -= instance.OnLeftRoll;
             @RightTilt.started -= instance.OnRightTilt;
             @RightTilt.performed -= instance.OnRightTilt;
             @RightTilt.canceled -= instance.OnRightTilt;
+            @RightRoll.started -= instance.OnRightRoll;
+            @RightRoll.performed -= instance.OnRightRoll;
+            @RightRoll.canceled -= instance.OnRightRoll;
             @Comms.started -= instance.OnComms;
             @Comms.performed -= instance.OnComms;
             @Comms.canceled -= instance.OnComms;
@@ -827,12 +891,26 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLeftTilt(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Left Roll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftRoll(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "Right Tilt" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightTilt(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Right Roll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightRoll(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Comms" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

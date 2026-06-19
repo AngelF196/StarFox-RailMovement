@@ -19797,7 +19797,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 6e-44, z: 4.9e-44, w: 9.257e-42}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 3e-45, z: 8.465e-42, w: 4.856528e+33}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -34669,12 +34669,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f856e5f8836b0cd4ba69e4031c11c32e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xySpeed: 37.9
+  xSpeed: 38
+  ySpeed: 38
+  xySpeed: 38
   lookSpeed: 3108
   forwardSpeed: 12
   horizLeanLimit: 50
   horizLeanTime: 0.1
-  shipNoseTiltDivisor: 3
+  xShipNoseTiltDivisor: 1.5
+  yShipNoseTiltDivisor: 1.5
   aimTarget: {fileID: 211228551}
   dolly: {fileID: 361593942}
   cameraParent: {fileID: 504094690}

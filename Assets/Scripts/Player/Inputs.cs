@@ -10,6 +10,9 @@ public class Inputs : MonoBehaviour
     public Attacking attack;
     public Corridor cMovement;
 
+    private bool boosting;
+    private bool breaking;
+
     [SerializeField] private bool invertY = true;
     private Vector2 movementAxis;
 
@@ -28,25 +31,38 @@ public class Inputs : MonoBehaviour
 
         cMovement.LocalMove(movementAxis);
         cMovement.RotationLook(movementAxis);
-        cMovement.HorizontalLean(movementAxis.x);
 
-        if (inputs.Arwing.Boost.WasPressedThisFrame()) cMovement.Boost(true);
-
-        if (inputs.Arwing.Boost.WasReleasedThisFrame()) cMovement.Boost(false);
-
-        if (inputs.Arwing.Break.WasPressedThisFrame()) cMovement.Break(true);
-
-        if (inputs.Arwing.Break.WasReleasedThisFrame()) cMovement.Break(false);
-
-        if (inputs.Arwing.Lazer.WasPressedThisFrame()) attack.Shoot();
-
-        if (inputs.Arwing.Bomb.WasPressedThisFrame()) attack.Bomb();
-
-        if (inputs.Arwing.LeftTilt.WasPressedThisFrame() || inputs.Arwing.RightTilt.WasPressedThisFrame())
+        if (!breaking) 
         {
-            int dir = inputs.Arwing.LeftTilt.WasPressedThisFrame() ? -1 : 1;
-            cMovement.QuickSpin(dir);
+            if (inputs.Arwing.Boost.WasPressedThisFrame()) cMovement.Boost(true); boosting = true;
+            if (inputs.Arwing.Boost.WasReleasedThisFrame()) cMovement.Boost(false); boosting = false;
         }
 
+        if (!boosting)
+        {
+            if (inputs.Arwing.Break.WasPressedThisFrame()) cMovement.Break(true); breaking = true;
+            if (inputs.Arwing.Break.WasReleasedThisFrame()) cMovement.Break(false); breaking = false;
+        }
+
+        if (inputs.Arwing.Lazer.WasPressedThisFrame()) attack.Shoot();
+        if (inputs.Arwing.Bomb.WasPressedThisFrame()) attack.Bomb();
+
+
+        TiltCheck(movementAxis.x);
+    }
+
+    public void TiltCheck(float xAxis)
+    {
+        int rollDir = 0;
+        int tiltDir = 0;
+        tiltDir = inputs.Arwing.LeftTilt.IsPressed() ? -1 : 0;
+        tiltDir += inputs.Arwing.RightTilt.IsPressed() ? 1 : 0;
+
+        if (inputs.Arwing.LeftRoll.WasPerformedThisFrame() || inputs.Arwing.RightRoll.WasPerformedThisFrame())
+        {
+            rollDir = inputs.Arwing.LeftRoll.WasPerformedThisFrame() ? -1 : 1;
+        }
+
+        cMovement.ZTilt(xAxis, tiltDir, rollDir);
     }
 }
