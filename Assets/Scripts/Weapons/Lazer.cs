@@ -14,14 +14,17 @@ public class Lazer : MonoBehaviour
         rb.AddForce(transform.forward * 100f, ForceMode.VelocityChange);
         StartCoroutine(Die());
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Damageable")
         {
             collision.gameObject.GetComponent<Damageable>().TakeDamage(damage);
         }
-        Destroy(transform.parent.gameObject);
+
+        if (collision.gameObject.tag != "Player" && collision.gameObject.tag != "Lazer")
+        {
+            Destroy(transform.parent.gameObject);
+        }
     }
 
     IEnumerator Die()

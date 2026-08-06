@@ -810,7 +810,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -880,9 +880,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 906100001c610000
-      m_LastClickedID: 24860
-      m_ExpandedIDs: d8faffffdafaffffb05f00002461000028610000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: dafaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1042,7 +1042,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 71}
     m_SelectedIDs: aa640000
     m_LastClickedID: 25770
-    m_ExpandedIDs: 000000008c6400008e64000090640000926400009464000000ca9a3b
+    m_ExpandedIDs: 000000008c6400008e640000906400009264000094640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
