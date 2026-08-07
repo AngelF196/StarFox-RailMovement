@@ -124,13 +124,6 @@ public class PlayerMovement : MonoBehaviour
         target.localEulerAngles = new Vector3(targetEulerAngels.x, targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, -axis * leanLimit, lerpTime));
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(aimTarget.position, .5f);
-        Gizmos.DrawSphere(aimTarget.position, .15f);
-
-    }
 
     public void QuickSpin(int dir)
     {

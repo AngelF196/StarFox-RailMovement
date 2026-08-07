@@ -15,15 +15,17 @@ public class AllRange : MonoBehaviour
     private ShipActions shipActions;
 
     [Header("Movement")]
-    public float turnSpeed = 90f;
+    [SerializeField] public float turnSpeed = 60f;
+    [SerializeField] private float turnAcceleration = 180f;
+    [SerializeField] private float turnDeceleration = 240f;
     public float pitchSpeed = 70f;
     public float pitchBound;
     public float pitchLevelingSpeed;
     public float forwardSpeed = 12f;
 
-    private float yaw;
-    private float pitch;
-
+    public float yaw;
+    public float pitch;
+    public float yawVelocity;
 
     void Start()
     {
@@ -51,8 +53,23 @@ public class AllRange : MonoBehaviour
 
     private void HandleMovementRotation()
     {
-        // Left/right turns the ship
-        yaw += _leftStick.x * turnSpeed * Time.deltaTime;
+        // Calculate the desired yaw speed based on stick input
+        float targetYawVelocity = _leftStick.x * turnSpeed;
+
+        // Accelerate toward the target turn speed
+        float acceleration = Mathf.Abs(_leftStick.x) > 0.01f
+            ? turnAcceleration
+            : turnDeceleration;
+
+        yawVelocity = Mathf.MoveTowards(
+            yawVelocity,
+            targetYawVelocity,
+            acceleration * Time.deltaTime
+        );
+
+        // Apply yaw
+        yaw += yawVelocity * Time.deltaTime;
+
 
         // Up/down pitches the ship
         if (Mathf.Abs(_leftStick.y) > 0)
