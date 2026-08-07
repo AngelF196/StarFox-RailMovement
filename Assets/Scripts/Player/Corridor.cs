@@ -108,12 +108,9 @@ public class Corridor : MonoBehaviour
         while (timer < 1f)
         {
             timer += Time.deltaTime/rollDuration;
-
             rollOffset = Mathf.SmoothStep(0, 360 * -rollDir, timer);
-            
             yield return null;
         }
-
         rollOffset = 0f;
         rollCoroutine = null;
     }
@@ -123,7 +120,6 @@ public class Corridor : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(aimTarget.position, .5f);
         Gizmos.DrawSphere(aimTarget.position, .15f);
-
     }
 
     void SetSpeed(float x)

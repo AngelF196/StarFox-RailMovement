@@ -316,6 +316,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1857510597198119403, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
+        type: 3}
+      propertyPath: cMovement
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4979052323955263384, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -366,18 +371,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7487896139973313864, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
+        type: 3}
+      propertyPath: m_Follow
+      value: 
+      objectReference: {fileID: 1344528496}
     - target: {fileID: 8614742519299579168, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
         type: 3}
       propertyPath: m_Name
       value: GameplayPlane 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3384871930040953940, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8905913420002108792, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
         type: 3}
-      insertIndex: 2
+      insertIndex: 1
       addedObject: {fileID: 1344528494}
   m_SourcePrefab: {fileID: 100100000, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd, type: 3}
 --- !u!114 &1344528490 stripped
@@ -434,6 +445,12 @@ MonoBehaviour:
   horizLeanTime: 0.1
   xShipNoseTiltDivisor: 1.5
   yShipNoseTiltDivisor: 1.5
+--- !u!4 &1344528496 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5009051501022349348, guid: 76fd4ca3d1dcd3b44bf2978fb7f8f7bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1344528489}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
