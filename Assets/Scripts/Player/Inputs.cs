@@ -10,8 +10,8 @@ public class Inputs : MonoBehaviour
     public Attacking attack;
     public Corridor cMovement;
 
-    private bool boosting;
-    private bool breaking;
+    [SerializeField] private bool boosting;
+    [SerializeField] private bool breaking;
 
     [SerializeField] private bool invertY = true;
     private Vector2 movementAxis;
@@ -26,7 +26,6 @@ public class Inputs : MonoBehaviour
     void Update()
     {
         movementAxis = inputs.Arwing.Move.ReadValue<Vector2>();
-
         if (invertY) movementAxis.y = movementAxis.y * -1;
 
         cMovement.LocalMove(movementAxis);
@@ -34,14 +33,30 @@ public class Inputs : MonoBehaviour
 
         if (!breaking) 
         {
-            if (inputs.Arwing.Boost.WasPressedThisFrame()) cMovement.Boost(true); boosting = true;
-            if (inputs.Arwing.Boost.WasReleasedThisFrame()) cMovement.Boost(false); boosting = false;
+            if (inputs.Arwing.Boost.WasPressedThisFrame()) 
+            {
+                cMovement.Boost(true);
+                boosting = true;
+            }
+            if (inputs.Arwing.Boost.WasReleasedThisFrame())
+            {
+                cMovement.Boost(false); 
+                boosting = false;
+            }
         }
 
         if (!boosting)
         {
-            if (inputs.Arwing.Break.WasPressedThisFrame()) cMovement.Break(true); breaking = true;
-            if (inputs.Arwing.Break.WasReleasedThisFrame()) cMovement.Break(false); breaking = false;
+            if (inputs.Arwing.Break.WasPressedThisFrame())
+            {
+                cMovement.Break(true);
+                breaking = true;
+            }
+            if (inputs.Arwing.Break.WasReleasedThisFrame())
+            {
+                cMovement.Break(false);
+                breaking = false;
+            }
         }
 
         if (inputs.Arwing.Lazer.WasPressedThisFrame()) attack.Shoot();
