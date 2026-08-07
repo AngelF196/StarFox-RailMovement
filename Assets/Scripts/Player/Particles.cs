@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class Particles : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Particle Refs")]
+    public ParticleSystem trail;
+    public ParticleSystem circle;
+    public ParticleSystem barrel;
+    public ParticleSystem stars;
+
+    public void PlayBoostRing()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlayRollRing()
     {
-        
+
     }
+
+    public void PlayBoosting()
+    {
+
+    }
+
+    public void CancelBoosting()
+    {
+
+    }
+
 }

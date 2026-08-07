@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -6,13 +6,18 @@ using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.InputSystem;
 
-public class Corridor : MonoBehaviour
+public class UniMovement : MonoBehaviour
 {
     private Transform playerModel;
     private Inputs input;
     private float rollOffset = 0;
     private float currentZ;
     private Coroutine rollCoroutine;
+
+    [Header("Public References")]
+    public Transform aimTarget;
+    public CinemachineDollyCart dolly;
+    public Transform cameraParent;
 
     [Header("Parameters")]
     public float xSpeed = 38;
@@ -24,21 +29,6 @@ public class Corridor : MonoBehaviour
     public float horizLeanTime = 0.1f;
     public float xShipNoseTiltDivisor = 2;
     public float yShipNoseTiltDivisor = 2;
-
-    [Space]
-
-    [Header("Public References")]
-    public Transform aimTarget;
-    public CinemachineDollyCart dolly;
-    public Transform cameraParent;
-
-    [Space]
-
-    [Header("Particles")]
-    public ParticleSystem trail;
-    public ParticleSystem circle;
-    public ParticleSystem barrel;
-    public ParticleSystem stars;
 
     void Start()
     {
@@ -70,7 +60,7 @@ public class Corridor : MonoBehaviour
     public void RotationLook(Vector2 movement)
     {
         aimTarget.parent.position = Vector3.zero;
-        aimTarget.localPosition = new Vector3(movement.x/xShipNoseTiltDivisor, movement.y/yShipNoseTiltDivisor, 1);
+        aimTarget.localPosition = new Vector3(movement.x / xShipNoseTiltDivisor, movement.y / yShipNoseTiltDivisor, 1);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(aimTarget.position), Mathf.Deg2Rad * lookSpeed * Time.deltaTime);
     }
 
@@ -89,7 +79,7 @@ public class Corridor : MonoBehaviour
         if (rollDir != 0 && rollCoroutine is null)
         {
             rollCoroutine = StartCoroutine(BarrelRoll(rollDir));
-            barrel.Play();
+            //barrel.Play();
 
         }
 
@@ -97,7 +87,7 @@ public class Corridor : MonoBehaviour
         playerModel.localEulerAngles.y,
         // Build off a Z value that is not continuously added to
         currentZ + rollOffset);
-        
+
     }
 
     private IEnumerator BarrelRoll(int rollDir)
@@ -107,10 +97,10 @@ public class Corridor : MonoBehaviour
 
         while (timer < 1f)
         {
-            timer += Time.deltaTime/rollDuration;
+            timer += Time.deltaTime / rollDuration;
 
             rollOffset = Mathf.SmoothStep(0, 360 * -rollDir, timer);
-            
+
             yield return null;
         }
 
@@ -152,48 +142,4 @@ public class Corridor : MonoBehaviour
     }
 
 
-    public void Boost(bool state)
-    {
-
-        if (state)
-        {
-            cameraParent.GetComponentInChildren<CinemachineImpulseSource>().GenerateImpulse();
-            trail.Play();
-            circle.Play();
-        }
-        else
-        {
-            trail.Stop();
-            circle.Stop();
-        }
-        trail.GetComponent<TrailRenderer>().emitting = state;
-
-        float origFov = state ? 40 : 55;
-        float endFov = state ? 55 : 40;
-        float origChrom = state ? 0 : 1;
-        float endChrom = state ? 1 : 0;
-        float origDistortion = state ? 0 : -30;
-        float endDistorton = state ? -30 : 0;
-        float starsVel = state ? -20 : -1;
-        float speed = state ? forwardSpeed * 2 : forwardSpeed;
-        float zoom = state ? -7 : 0;
-
-        DOVirtual.Float(origChrom, endChrom, .5f, Chromatic);
-        DOVirtual.Float(origFov, endFov, .5f, FieldOfView);
-        DOVirtual.Float(origDistortion, endDistorton, .5f, DistortionAmount);
-        var pvel = stars.velocityOverLifetime;
-        pvel.z = starsVel;
-
-        DOVirtual.Float(dolly.m_Speed, speed, .15f, SetSpeed);
-        SetCameraZoom(zoom, .4f);
-    }
-
-    public void Break(bool state)
-    {
-        float speed = state ? forwardSpeed / 3 : forwardSpeed;
-        float zoom = state ? 3 : 0;
-
-        DOVirtual.Float(dolly.m_Speed, speed, .15f, SetSpeed);
-        SetCameraZoom(zoom, .4f);
-    }
 }
