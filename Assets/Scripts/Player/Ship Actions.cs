@@ -7,6 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.InputSystem;
 using System.Threading;
 using UnityEngine.Events;
+using System;
 
 public class ShipActions : MonoBehaviour
 {
@@ -31,16 +32,20 @@ public class ShipActions : MonoBehaviour
     [Header("Rolling")]
     [SerializeField] private float _rollBound;
     [SerializeField] private float _rollSpeed;
+    [SerializeField] private int _tiltDir = 0;
+    [SerializeField] private int _rollDir = 0;
 
     private float rollOffset = 0;
-    private float currentZ;
+    [SerializeField] private float currentZ;
     private Coroutine rollCoroutine;
 
     public enum controlType { ArwingC, ArwingR, Landmaster}
 
     private void Update()
     {
-
+        ZTilt(leftStick.x, _tiltDir, _rollDir);
+        if (MathF.Abs(currentZ) > 90) currentZ = 0; 
+        if (MathF.Abs(_tiltDir) > 1) _tiltDir = 0;
     }
 
     // Attacking
@@ -51,7 +56,7 @@ public class ShipActions : MonoBehaviour
             Bomb lastBomb = FindObjectOfType<Bomb>();
             if (lastBomb is null)
             {
-                Instantiate(bombPrefab, transform.position, Quaternion.LookRotation(transform.forward));
+                Instantiate(bombPrefab, transform.position, transform.rotation);
             }
             else lastBomb.Explode();
         }
@@ -59,22 +64,39 @@ public class ShipActions : MonoBehaviour
     public void Shoot(InputAction.CallbackContext context)
     {
         if (context.performed)
-        Instantiate(lazerPrefab, transform.position, Quaternion.LookRotation(transform.forward));
+        Instantiate(lazerPrefab, transform.position, transform.rotation);
+    }
+
+    // Tilt/Roll Inputs
+    public void LeftTilt(InputAction.CallbackContext context) 
+    {
+        if (context.performed) _tiltDir -= 1;
+        else if (context.canceled) _tiltDir += 1;
+    }
+    public void RightTilt(InputAction.CallbackContext context)
+    {
+        if (context.performed) _tiltDir += 1;
+        else if (context.canceled) _tiltDir -= 1;
+    }
+    public void LeftRoll(InputAction.CallbackContext context)
+    {
+        if (context.performed) _rollDir -= 1;
+    }
+    public void RightRoll(InputAction.CallbackContext context)
+    {
+        if (context.performed) _rollDir += 1;
     }
 
     // Tilting
-    public void ZTilt(float axis, int tiltDir, int rollDir)
+    public void ZTilt(float leftStickX, int tiltDir, int rollDir)
     {
         float targetZ = 0f;
-
         // base tilting
-        targetZ = -axis * _rollBound;
-
+        targetZ = -leftStickX * _rollBound;
         // L/R Hard Tilt
         if (tiltDir != 0) targetZ = 90f * -tiltDir;
-
-        currentZ = Mathf.LerpAngle(currentZ, targetZ, _rollSpeed);
-
+        currentZ = Mathf.LerpAngle(currentZ, targetZ, _rollSpeed * Time.deltaTime);
+        
         if (rollDir != 0 && rollCoroutine is null)
         {
             rollCoroutine = StartCoroutine(BarrelRoll(rollDir));
@@ -95,9 +117,10 @@ public class ShipActions : MonoBehaviour
         while (timer < 1f)
         {
             timer += Time.deltaTime / rollDuration;
-            rollOffset = Mathf.SmoothStep(0, 360 * -rollDir, timer);
+            rollOffset = Mathf.SmoothStep(0, 360 * (1 * MathF.Sign(-rollDir)), timer);
             yield return null;
         }
+        _rollDir = 0;
         rollOffset = 0f;
         rollCoroutine = null;
     }

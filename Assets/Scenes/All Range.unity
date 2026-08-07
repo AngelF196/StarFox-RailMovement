@@ -393,6 +393,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _shipModel: {fileID: 5009051501829613645}
+  _rollBound: 20
+  _rollSpeed: 9.17
+  _tiltDir: 0
+  _rollDir: 0
+  currentZ: 0
 --- !u!23 &27385769243085040
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21296,19 +21302,67 @@ MonoBehaviour:
     m_ActionId: f1ba0d36-48eb-4cd5-b651-1c94a6531f70
     m_ActionName: Arwing/Boost[/SwitchProControllerHID/buttonNorth]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1344528494}
+        m_TargetAssemblyTypeName: ShipActions, Assembly-CSharp
+        m_MethodName: LeftTilt
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_ActionId: 2776c80d-3c14-4091-8c56-d04ced07a2b0
     m_ActionName: Arwing/Left Tilt[/SwitchProControllerHID/leftShoulder]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1344528494}
+        m_TargetAssemblyTypeName: ShipActions, Assembly-CSharp
+        m_MethodName: LeftRoll
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a9615cb0-d8b3-4de5-ba38-f4ed64fd6de6
     m_ActionName: Arwing/Left Roll[/SwitchProControllerHID/leftShoulder]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1344528494}
+        m_TargetAssemblyTypeName: ShipActions, Assembly-CSharp
+        m_MethodName: RightTilt
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba
     m_ActionName: Arwing/Right Tilt[/SwitchProControllerHID/rightShoulder]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1344528494}
+        m_TargetAssemblyTypeName: ShipActions, Assembly-CSharp
+        m_MethodName: RightRoll
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 8a56625c-6823-47b7-a44a-f967f7d53645
     m_ActionName: Arwing/Right Roll[/SwitchProControllerHID/rightShoulder]
   - m_PersistentCalls:
@@ -26502,7 +26556,7 @@ MonoBehaviour:
   turnSpeed: 90
   pitchSpeed: 70
   pitchBound: 25
-  pitchLevelingSpeed: 1.36
+  pitchLevelingSpeed: 40
   forwardSpeed: 12
 --- !u!1 &8993684232698797557
 GameObject:

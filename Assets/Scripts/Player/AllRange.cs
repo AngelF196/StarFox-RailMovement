@@ -57,7 +57,7 @@ public class AllRange : MonoBehaviour
         // Up/down pitches the ship
         if (Mathf.Abs(_leftStick.y) > 0)
         {
-            pitch -= _leftStick.y * pitchSpeed * Time.deltaTime;
+            pitch += _leftStick.y * pitchSpeed * Time.deltaTime;
         }
         else pitch = Mathf.MoveTowards(pitch, 0f, pitchLevelingSpeed * Time.deltaTime);
 
