@@ -7,17 +7,14 @@ public class Attacking : MonoBehaviour
     public GameObject LazerPrefab;
     public GameObject BombPrefab;
 
+    private GameObject lastBomb;
     public void Bomb()
     {
-        Bomb bomb = FindObjectOfType<Bomb>();
-        if (bomb == null)
+        if (lastBomb == null)
         {
-            Instantiate(BombPrefab, transform.position, Quaternion.LookRotation(transform.forward));
+            lastBomb = Instantiate(BombPrefab, transform.position, Quaternion.LookRotation(transform.forward));
         }
-        else
-        {
-            bomb.Explode();
-        }
+        else lastBomb.GetComponent<Bomb>().Explode();
     }
     public void Shoot()
     {
