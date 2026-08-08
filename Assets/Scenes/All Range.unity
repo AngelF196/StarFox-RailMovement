@@ -158,7 +158,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -26765,8 +26765,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraParent: {fileID: 3496255111394468181}
-  turnSpeed: 60
-  turnAcceleration: 180
+  turnSpeed: 28.2
+  turnAcceleration: 100.4
   turnDeceleration: 240
   pitchSpeed: 70
   pitchBound: 25
@@ -26776,8 +26776,8 @@ MonoBehaviour:
   bankSpeed: 6
   virtualCamera: {fileID: 7487896139166065953}
   cameraMaxBank: 15
-  cameraBankSpeed: 5
-  yaw: 0
+  cameraBankSpeed: 10.1
+  yaw: 2179.723
   pitch: 0
   yawVelocity: 0
 --- !u!1 &8993684232698797557
