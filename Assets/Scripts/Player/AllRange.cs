@@ -1,3 +1,4 @@
+using Cinemachine;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class AllRange : MonoBehaviour
 
     private Vector2 _leftStick;
     private Vector2 _rightStick;
+
     private Rigidbody rb;
     private ShipActions shipActions;
 
@@ -18,14 +20,28 @@ public class AllRange : MonoBehaviour
     [SerializeField] public float turnSpeed = 60f;
     [SerializeField] private float turnAcceleration = 180f;
     [SerializeField] private float turnDeceleration = 240f;
-    public float pitchSpeed = 70f;
-    public float pitchBound;
-    public float pitchLevelingSpeed;
-    public float forwardSpeed = 12f;
+
+    [SerializeField] private float pitchSpeed = 70f;
+    [SerializeField] private float pitchBound = 60f;
+    [SerializeField] private float pitchLevelingSpeed = 120f;
+
+    [SerializeField] private float forwardSpeed = 12f;
+
+    [Header("Banking")]
+    [SerializeField] private float maxBank = 55f;
+    [SerializeField] private float bankSpeed = 6f;
+
+    [Header("Camera Banking")]
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private float cameraMaxBank = 15f;
+    [SerializeField] private float cameraBankSpeed = 5f;
+    private float cameraBank;
 
     public float yaw;
     public float pitch;
     public float yawVelocity;
+
+    private float bank;
 
     void Start()
     {
@@ -46,17 +62,21 @@ public class AllRange : MonoBehaviour
         _leftStick = leftStick;
     }
 
+
     public void RightStickHandle(Vector2 rightStick)
     {
         _rightStick = rightStick;
     }
 
+
     private void HandleMovementRotation()
     {
-        // Calculate the desired yaw speed based on stick input
+        // -----------------------------------
+        // YAW / TURNING
+        // -----------------------------------
+
         float targetYawVelocity = _leftStick.x * turnSpeed;
 
-        // Accelerate toward the target turn speed
         float acceleration = Mathf.Abs(_leftStick.x) > 0.01f
             ? turnAcceleration
             : turnDeceleration;
@@ -67,30 +87,105 @@ public class AllRange : MonoBehaviour
             acceleration * Time.deltaTime
         );
 
-        // Apply yaw
-        yaw += yawVelocity * Time.deltaTime;
+        /*
+         * The amount we're currently turning determines
+         * how much the Arwing banks.
+         *
+         * This means the bank follows the actual movement
+         * rather than simply following the stick.
+         */
+        float turnAmount = Mathf.Clamp(
+            yawVelocity / turnSpeed,
+            -1f,
+            1f
+        );
+
+        float targetBank = -turnAmount * maxBank;
+
+        bank = Mathf.MoveTowards(
+            bank,
+            targetBank,
+            bankSpeed * maxBank * Time.deltaTime
+        );
 
 
-        // Up/down pitches the ship
-        if (Mathf.Abs(_leftStick.y) > 0)
+        /*
+         * Make banking contribute to the turn.
+         *
+         * At maximum bank, the ship gets additional
+         * turning power.
+         */
+        float bankInfluence = Mathf.Abs(bank) / maxBank;
+
+        float effectiveYawVelocity =
+            yawVelocity * (1f + bankInfluence);
+
+
+        yaw += effectiveYawVelocity * Time.deltaTime;
+
+
+        // -----------------------------------
+        // PITCH
+        // -----------------------------------
+
+        if (Mathf.Abs(_leftStick.y) > 0.01f)
         {
             pitch += _leftStick.y * pitchSpeed * Time.deltaTime;
         }
-        else pitch = Mathf.MoveTowards(pitch, 0f, pitchLevelingSpeed * Time.deltaTime);
+        else
+        {
+            pitch = Mathf.MoveTowards(
+                pitch,
+                0f,
+                pitchLevelingSpeed * Time.deltaTime
+            );
+        }
 
-        // Keep the ship upright
-        pitch = Mathf.Clamp(pitch, -pitchBound, pitchBound);
+        pitch = Mathf.Clamp(
+            pitch,
+            -pitchBound,
+            pitchBound
+        );
 
-        // Apply yaw and pitch
+
+        // -----------------------------------
+        // FINAL SHIP ROTATION
+        // -----------------------------------
+
         transform.rotation =
-            Quaternion.AngleAxis(yaw, Vector3.up) *
-            Quaternion.AngleAxis(pitch, Vector3.right);
+            Quaternion.Euler(pitch, yaw, bank);
     }
 
-    // Update is called once per frame
+
+    private void HandleCamera()
+    {
+        float turnAmount = Mathf.Clamp(
+            yawVelocity / turnSpeed,
+            -1f,
+            1f
+        );
+
+        float targetCameraBank = -turnAmount * cameraMaxBank;
+
+        cameraBank = Mathf.MoveTowards(
+            cameraBank,
+            targetCameraBank,
+            cameraBankSpeed * Time.deltaTime
+        );
+
+        virtualCamera.m_Lens.Dutch = cameraBank;
+    }
+
+
     void Update()
     {
-        rb.velocity = transform.forward * forwardSpeed;
         HandleMovementRotation();
+        HandleCamera();
+    }
+
+
+    void FixedUpdate()
+    {
+        rb.velocity = transform.forward * forwardSpeed;
     }
 }
