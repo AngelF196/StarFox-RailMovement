@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -11,18 +9,33 @@ public class RangeCam : MonoBehaviour
     [Header("Look Ahead")]
     [SerializeField] private float lookAheadDistance = 5f;
     [SerializeField] private float lookAheadSmoothing = 5f;
+
+    [Header("Turn Camera Offset")]
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private float turnCameraOffset = 3f;
+    [SerializeField] private float turnCameraSmoothing = 5f;
+
     [SerializeField] private AllRange _ship;
 
     private float currentLookAhead;
+    private float currentCameraOffset;
+
+    private CinemachineTransposer transposer;
+    private Vector3 baseFollowOffset;
 
     private void Start()
     {
         _ship = FindFirstObjectByType<AllRange>();
+
+        transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+
+        if (transposer != null)
+            baseFollowOffset = transposer.m_FollowOffset;
     }
 
     private void LateUpdate()
     {
-        if (player == null || lookTarget == null)
+        if (player == null || lookTarget == null || _ship == null)
             return;
 
         float turnAmount = Mathf.Clamp(
@@ -40,13 +53,15 @@ public class RangeCam : MonoBehaviour
         Vector3 noseDirection =
             noseRotation * Vector3.forward;
 
-        // The ship's roll is ignored here. We only want the
-        // horizontal direction associated with its yaw.
+        // Horizontal right direction based ONLY on yaw.
         Vector3 rightDirection =
             Quaternion.AngleAxis(_ship.yaw, Vector3.up)
             * Vector3.right;
 
-        // How far the camera pulls sideways based on turn rate.
+        // -------------------------
+        // LOOK TARGET
+        // -------------------------
+
         float targetLookAhead =
             turnAmount * lookAheadDistance;
 
@@ -56,12 +71,33 @@ public class RangeCam : MonoBehaviour
             lookAheadSmoothing * Time.deltaTime
         );
 
-        // Always look ahead of the ship's nose,
-        // then offset sideways based on the turn.
         lookTarget.position =
             player.position +
             noseDirection * lookAheadDistance +
             rightDirection * currentLookAhead;
+
+        // -------------------------
+        // CAMERA POSITION
+        // -------------------------
+
+        float targetCameraOffset =
+            turnAmount * turnCameraOffset;
+
+        currentCameraOffset = Mathf.Lerp(
+            currentCameraOffset,
+            targetCameraOffset,
+            turnCameraSmoothing * Time.deltaTime
+        );
+
+        if (transposer != null)
+        {
+            Vector3 followOffset = baseFollowOffset;
+
+            // Move the camera sideways relative to
+            // the ship's current horizontal heading.
+            followOffset.x += currentCameraOffset;
+
+            transposer.m_FollowOffset = followOffset;
+        }
     }
 }
-

@@ -122,7 +122,7 @@ public class AllRange : MonoBehaviour
 
         // FINAL SHIP ROTATION
         transform.rotation =
-            Quaternion.Euler(pitch, yaw, bank);
+            Quaternion.Euler(pitch, yaw, transform.eulerAngles.z);
     }
 
 
