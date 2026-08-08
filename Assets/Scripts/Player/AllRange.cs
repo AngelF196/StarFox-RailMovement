@@ -56,36 +56,27 @@ public class AllRange : MonoBehaviour
             pitch -= 360f;
     }
 
-
     public void LeftStickHandle(Vector2 leftStick)
     {
         _leftStick = leftStick;
     }
-
 
     public void RightStickHandle(Vector2 rightStick)
     {
         _rightStick = rightStick;
     }
 
-
     private void HandleMovementRotation()
     {
-        // -----------------------------------
-        // YAW / TURNING
-        // -----------------------------------
-
+        // YAW/TURNING
         float targetYawVelocity = _leftStick.x * turnSpeed;
 
         float acceleration = Mathf.Abs(_leftStick.x) > 0.01f
             ? turnAcceleration
             : turnDeceleration;
 
-        yawVelocity = Mathf.MoveTowards(
-            yawVelocity,
-            targetYawVelocity,
-            acceleration * Time.deltaTime
-        );
+        yawVelocity = Mathf.MoveTowards(yawVelocity, targetYawVelocity,
+            acceleration * Time.deltaTime);
 
         /*
          * The amount we're currently turning determines
@@ -99,14 +90,9 @@ public class AllRange : MonoBehaviour
             -1f,
             1f
         );
-
         float targetBank = -turnAmount * maxBank;
-
-        bank = Mathf.MoveTowards(
-            bank,
-            targetBank,
-            bankSpeed * maxBank * Time.deltaTime
-        );
+        bank = Mathf.MoveTowards(bank, targetBank, 
+            bankSpeed * maxBank * Time.deltaTime);
 
 
         /*
@@ -116,42 +102,25 @@ public class AllRange : MonoBehaviour
          * turning power.
          */
         float bankInfluence = Mathf.Abs(bank) / maxBank;
-
         float effectiveYawVelocity =
             yawVelocity * (1f + bankInfluence);
-
 
         yaw += effectiveYawVelocity * Time.deltaTime;
 
 
-        // -----------------------------------
         // PITCH
-        // -----------------------------------
-
         if (Mathf.Abs(_leftStick.y) > 0.01f)
         {
             pitch += _leftStick.y * pitchSpeed * Time.deltaTime;
         }
         else
         {
-            pitch = Mathf.MoveTowards(
-                pitch,
-                0f,
-                pitchLevelingSpeed * Time.deltaTime
+            pitch = Mathf.MoveTowards(pitch, 0f, pitchLevelingSpeed * Time.deltaTime
             );
         }
+        pitch = Mathf.Clamp(pitch, -pitchBound, pitchBound);
 
-        pitch = Mathf.Clamp(
-            pitch,
-            -pitchBound,
-            pitchBound
-        );
-
-
-        // -----------------------------------
         // FINAL SHIP ROTATION
-        // -----------------------------------
-
         transform.rotation =
             Quaternion.Euler(pitch, yaw, bank);
     }
@@ -182,7 +151,6 @@ public class AllRange : MonoBehaviour
         HandleMovementRotation();
         HandleCamera();
     }
-
 
     void FixedUpdate()
     {
